@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <h1 th:text="${message}">Hello, World!</h1>
+        <p>Welcome to a modern Spring Boot web page with a fresh color scheme.</p>
+        <button>More Infos</button>
+    </div>
+</body>
+</html>
