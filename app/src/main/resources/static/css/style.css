@@ -1,0 +1,57 @@
+/* Updated CSS for the redesigned landing page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0D2955; /* Dark blue background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #ffffff; /* White text for better contrast */
+}
+
+.container {
+    text-align: center;
+    background-color: #E67A22; /* Bright orange for the container */
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+}
+
+h1 {
+    color: #0D2955; /* Dark blue for the header text */
+    margin-bottom: 20px;
+}
+
+p {
+    color: #ffffff; /* White for the paragraph text */
+}
+
+a {
+    text-decoration: none;
+    color: #E67A22; /* Bright orange for links */
+    font-weight: bold;
+}
+
+a:hover {
+    color: #ffffff; /* Change to white on hover for contrast */
+}
+
+button {
+    background-color: #0D2955; /* Dark blue for the button */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #E67A22; /* Bright orange on hover */
+    color: #0D2955;
+}

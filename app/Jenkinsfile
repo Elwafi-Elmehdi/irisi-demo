@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    environment {
+        REMOTE_SERVER = 'your.server.ip.address' // Replace with your remote server IP or hostname
+        REMOTE_USER = 'your-remote-username'     // Replace with the remote server's username
+        SSH_CREDENTIALS_ID = 'my-ssh-key'        // Jenkins credentials ID for SSH key
+        JAR_NAME = 'helloworld-0.0.1-SNAPSHOT.jar' // Update with the actual JAR name if different
+        TARGET_DIR = '/path/on/remote/server'    // Directory on the remote server to copy the JAR
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clone the code from the Git repository
+                git branch: 'main', url: 'https://github.com/your-repo/your-project.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build the Spring Boot app using Maven
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Copy JAR to Remote Server') {
+            steps {
+                // Use SSH agent plugin for secure copy
+                sshagent(credentials: [SSH_CREDENTIALS_ID]) {
+                    sh """
+                    scp target/${JAR_NAME} ${REMOTE_USER}@${REMOTE_SERVER}:${TARGET_DIR}/
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Cleanup workspace after build
+            cleanWs()
+        }
+        success {
+            echo 'Build and deployment completed successfully!'
+        }
+        failure {
+            echo 'Build or deployment failed!'
+        }
+    }
+}
