@@ -13,7 +13,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clone the code from the Git repository
-                git branch: 'main', url: 'https://github.com/your-repo/your-project.git'
+                git branch: 'completed', url: 'https://github.com/Elwafi-Elmehdi/irisi-demo.git'
             }
         }
 

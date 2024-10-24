@@ -1,0 +1,53 @@
+- name: Setup application environment
+  hosts: all
+  become: yes
+  vars:
+    app_name: irisi-app
+    jar_file: irisi-0.0.1-SNAPSHOT.jar # Update with the actual JAR file name
+    app_user: irisi
+    deploy_dir: /opt/irisi
+    service_name: irisi-demo
+  tasks:
+    - name: create a user
+      ansible.builtin.user:
+        name: irisi
+        group: irisi
+        create_home: false
+        shell: /bin/false
+
+    - name: create directory for app
+      ansible.builtin.file:
+        path: /opt/irisi
+        state: directory
+        owner: irisi
+        group: irisi
+        mode: 0760
+    
+    - name: copy the jar to the app path
+      ansible.builtin.copy:
+        remote_src: true
+        src: /root/app.jar
+        dest: /opt/irisi/app.jar
+        owner: irisi
+        group: irisi
+        mode: 0760
+  
+    - name: create systemd service
+      copy:
+        dest: /etc/systemd/system/"{{ service_name }}".service
+        content: |
+          [Unit]
+          Description=Irisi Demo Application
+          Documentation=https://github.com/Elwafi-Elmehdi/irisi-demo.git
+          After=network.target
+
+          [Service]
+          User={{ app_user }}
+          WorkingDirectory={{ deploy_dir }}
+          ExecStart=/usr/bin/java -jar {{ deploy_dir }}/{{ jar_file }}
+          SuccessExitStatus=143
+          Restart=always
+          RestartSec=3
+
+          [Install]
+          WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+- name: Global setup 
+  hosts: all
+  become: yes
+  tasks:
+    - name: install jenkins
+      ansible.builtin.import_playbook: ./jenkins-playbook.yml
+    - name: deploy application
+      ansible.builtin.import_playbook: ./setup-app-playbook.yml
