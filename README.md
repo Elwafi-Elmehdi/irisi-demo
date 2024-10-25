@@ -69,3 +69,11 @@ $ ansible-playbook -u ubuntu --private-key=~/.ssh/irisi  -i inventory/hosts.ini 
 ```
 
 ## Verifying the app 
+
+```shell
+$ terraform output irisi_server_public_ip
+```
+
+```shell
+$ curl -X GET <ip>:8080/
+```
