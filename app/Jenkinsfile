@@ -5,8 +5,8 @@ pipeline {
         REMOTE_SERVER = 'your.server.ip.address' // Replace with your remote server IP or hostname
         REMOTE_USER = 'your-remote-username'     // Replace with the remote server's username
         SSH_CREDENTIALS_ID = 'my-ssh-key'        // Jenkins credentials ID for SSH key
-        JAR_NAME = 'helloworld-0.0.1-SNAPSHOT.jar' // Update with the actual JAR name if different
-        TARGET_DIR = '/path/on/remote/server'    // Directory on the remote server to copy the JAR
+        JAR_NAME = 'irisi-0.0.1-SNAPSHOT.jar' // Update with the actual JAR name if different
+        TARGET_DIR = '/opt/irisi'    // Directory on the remote server to copy the JAR
     }
 
     stages {

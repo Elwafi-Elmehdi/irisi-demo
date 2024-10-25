@@ -35,6 +35,6 @@
         enabled: yes
 
     - name: Install SSH plugin for Jenkins
-      jenkins_plugin:
+      community.general.jenkins_plugin:
         name: ssh
         state: present

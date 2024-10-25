@@ -1,6 +1,5 @@
 - name: Setup application environment
   hosts: all
-  become: yes
   vars:
     app_name: irisi-app
     jar_file: irisi-0.0.1-SNAPSHOT.jar # Update with the actual JAR file name
@@ -8,12 +7,20 @@
     deploy_dir: /opt/irisi
     service_name: irisi-demo
   tasks:
+    - name: Install Java 17
+      apt:
+        name: openjdk-17-jdk
+        state: present
+        update_cache: yes
+      become: yes
+      
     - name: create a user
       ansible.builtin.user:
         name: irisi
-        group: irisi
+        # group: irisi
         create_home: false
         shell: /bin/false
+      become: yes
 
     - name: create directory for app
       ansible.builtin.file:
@@ -22,15 +29,34 @@
         owner: irisi
         group: irisi
         mode: 0760
+      become: yes
     
+    - name: build the app
+      ansible.builtin.shell:
+        cmd: "./mvnw clean package"
+        chdir: "../../app/"
+
+      register: build_output
+      delegate_to: localhost
+
     - name: copy the jar to the app path
       ansible.builtin.copy:
-        remote_src: true
-        src: /root/app.jar
-        dest: /opt/irisi/app.jar
+        src: ../../app/target/irisi-0.0.1-SNAPSHOT.jar
+        dest: "~/app.jar"
         owner: irisi
         group: irisi
         mode: 0760
+    
+    - name: copy the jar to the app path 1
+      ansible.builtin.copy:
+        src: "~/app.jar"
+        remote_src: true
+        dest: "{{ deploy_dir }}"
+        owner: irisi
+        group: irisi
+        mode: 0760
+      become: yes
+      
   
     - name: create systemd service
       copy:
@@ -44,10 +70,23 @@
           [Service]
           User={{ app_user }}
           WorkingDirectory={{ deploy_dir }}
-          ExecStart=/usr/bin/java -jar {{ deploy_dir }}/{{ jar_file }}
+          ExecStart=/usr/bin/java -jar {{ deploy_dir }}/app.jar --server.port 8080
           SuccessExitStatus=143
           Restart=always
           RestartSec=3
 
           [Install]
           WantedBy=multi-user.target
+      become: yes
+    
+    - name: reload system daemons
+      ansible.builtin.shell:
+        cmd: "systemctl daemon-reload"
+      become: yes
+  
+    - name: start and enable application
+      ansible.builtin.systemd:
+        service: "{{ service_name }}"
+        state: started
+        enabled: true 
+      become: yes
