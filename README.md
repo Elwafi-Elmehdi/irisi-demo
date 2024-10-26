@@ -31,6 +31,9 @@ aws_secret_access_key = <scret key>
 
 ## Objectives
 - Create a EC2 instance with a security group with ingress 22/TCP and 8080/TCP ports using Terraform.
+<div align="center">
+    <img src="images/irisi-club-aws-archi.png">
+</div>
 - Create a playbook that does:
     - Install `openjdk-17`
     - Create UNIX user `irisi`
