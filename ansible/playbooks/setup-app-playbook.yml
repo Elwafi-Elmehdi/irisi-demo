@@ -17,7 +17,6 @@
     - name: create a user
       ansible.builtin.user:
         name: irisi
-        # group: irisi
         create_home: false
         shell: /bin/false
       become: yes
@@ -35,23 +34,20 @@
       ansible.builtin.shell:
         cmd: "./mvnw clean package"
         chdir: "../../app/"
-
       register: build_output
       delegate_to: localhost
 
     - name: copy the jar to the app path
       ansible.builtin.copy:
-        src: ../../app/target/irisi-0.0.1-SNAPSHOT.jar
+        src: "../../app/target/irisi-0.0.1-SNAPSHOT.jar"
         dest: "~/app.jar"
-        owner: irisi
-        group: irisi
-        mode: 0760
+      delegate_to: localhost
+
     
     - name: copy the jar to the app path 1
       ansible.builtin.copy:
         src: "~/app.jar"
-        remote_src: true
-        dest: "{{ deploy_dir }}"
+        dest: "{{ deploy_dir }}/"
         owner: irisi
         group: irisi
         mode: 0760
@@ -59,34 +55,19 @@
       
   
     - name: create systemd service
-      copy:
-        dest: /etc/systemd/system/"{{ service_name }}".service
-        content: |
-          [Unit]
-          Description=Irisi Demo Application
-          Documentation=https://github.com/Elwafi-Elmehdi/irisi-demo.git
-          After=network.target
-
-          [Service]
-          User={{ app_user }}
-          WorkingDirectory={{ deploy_dir }}
-          ExecStart=/usr/bin/java -jar {{ deploy_dir }}/app.jar --server.port 8080
-          SuccessExitStatus=143
-          Restart=always
-          RestartSec=3
-
-          [Install]
-          WantedBy=multi-user.target
+      ansible.builtin.template:
+        src: irisi-demo-service.j2
+        dest: /etc/systemd/system/irisi-demo.service
       become: yes
     
     - name: reload system daemons
-      ansible.builtin.shell:
-        cmd: "systemctl daemon-reload"
+      ansible.builtin.systemd:
+        daemon_reload: true 
       become: yes
   
     - name: start and enable application
       ansible.builtin.systemd:
-        service: "{{ service_name }}"
-        state: started
+        service: "irisi-demo"
+        state: started 
         enabled: true 
       become: yes

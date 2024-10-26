@@ -53,6 +53,8 @@ $ terraform plan
 $ terraform apply
 ```
 
+you can skip to the **Verifying the app** section  
+
 you should see the plan summary like this: 
 ```shell
 Plan: 3 to add, 0 to change, 0 to destroy.

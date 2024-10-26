@@ -1,5 +1,3 @@
-# Create an SSH key pair
-
 data "aws_ami" "latest_ubuntu" {
   most_recent = true
 
@@ -59,8 +57,8 @@ resource "aws_instance" "my_instance" {
   provisioner "local-exec" {
     command = "echo ${self.public_ip} >> ../ansible/inventory/hosts.ini"
   }
-  # provisioner "local-exec" {
-  #   command     = "sleep 40s && ansible-playbook -u ubuntu --private-key=~/.ssh/irisi  -i inventory/hosts.ini --limit webservers playbooks/setup-app-playbook.yml --diff"
-  #   working_dir = "../ansible/"
-  # }
+  provisioner "local-exec" {
+    command     = "sleep 40s && ansible-playbook -u ubuntu --private-key=~/.ssh/irisi  -i inventory/hosts.ini --limit webservers playbooks/setup-app-playbook.yml --diff"
+    working_dir = "../ansible/"
+  }
 }

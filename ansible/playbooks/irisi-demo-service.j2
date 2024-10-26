@@ -1,0 +1,15 @@
+[Unit]
+Description=Irisi Demo Application
+Documentation=https://github.com/Elwafi-Elmehdi/irisi-demo.git
+After=network.target
+
+[Service]
+User={{ app_user }}
+WorkingDirectory={{ deploy_dir }}
+ExecStart=/usr/bin/java -jar {{ deploy_dir }}/app.jar --server.port 8080
+SuccessExitStatus=143
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
