@@ -34,6 +34,7 @@ aws_secret_access_key = <scret key>
 <div align="center">
     <img src="images/irisi-club-aws-archi.png">
 </div>
+
 - Create a playbook that does:
     - Install `openjdk-17`
     - Create UNIX user `irisi`
